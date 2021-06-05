@@ -1,9 +1,11 @@
 body {
   background-color: #292a2c;
-  padding-top: 4rem;
+  padding-top: 3.5rem;
 }
 
 #ytPlayer {
   width: fit-content;
   height: fit-content;
+  margin: auto;
+  color: aliceblue;
 }

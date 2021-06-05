@@ -10,17 +10,21 @@ import {
   Replay10Rounded,
   Forward10Rounded,
 } from '@material-ui/icons';
-import { IconButton } from '@material-ui/core';
+import { 
+  IconButton,
+  Slider,
+  Grid
+ } from '@material-ui/core';
 
 const socket = io('http://127.0.0.1:5000');
 var player;
 var playerState;
-var currentTime;
+var duration = 0;
 
 /*eslint-disable eqeqeq*/
 function Player(props) {
   const [isPlaying, setIsPlaying] = useState(false);
-  
+  const [currentTime, setCurrentTime] = useState(0);
   const iconStyle = { color: 'white', fontSize: 40 };
 
   const opts = {
@@ -28,18 +32,19 @@ function Player(props) {
     width: '1000',
     playerVars: {
       autoplay: 0,
-      controls: 1,
+      controls: 0,
       origin: window.location,
     },
   };
 
   const onPlayerReady = (event) => {
     player = event.target;
+    duration = player.getDuration();
 
     setInterval(() => {
-      currentTime = player.getCurrentTime();
       if(playerState == 1) {
-        socket.emit('setCurrentTime', currentTime);
+        socket.emit('setCurrentTime', player.getCurrentTime());
+        setCurrentTime(player.getCurrentTime());
       }
     }, 1000);
 
@@ -69,15 +74,15 @@ function Player(props) {
         break;
       case 3:
         player.pauseVideo();
-        break
+        break;
       default:
-        //
+        break;
     }
   });
 
   socket.on('getCurrentTime', (data) => {
-    currentTime = data;
-    player.seekTo(currentTime);
+    player.seekTo(data);
+    setCurrentTime(data);
   });
 
   useEffect(() => {
@@ -98,20 +103,38 @@ function Player(props) {
   }
 
   const rewindVideo = (seconds) => {
-    currentTime = currentTime - seconds
-    player.seekTo(currentTime);
-    socket.emit('syncVideo', currentTime);
+    player.seekTo(currentTime - seconds);
+    socket.emit('syncVideo', currentTime - seconds);
+    setCurrentTime(currentTime - seconds);
   }
 
   const forwardVideo = (seconds) => {
-    currentTime = currentTime + seconds
-    player.seekTo(currentTime);
-    socket.emit('syncVideo', currentTime);
+    player.seekTo(currentTime + seconds);
+    socket.emit('syncVideo', currentTime + seconds);
+    setCurrentTime(currentTime + seconds);
+  }
+
+  const setTime = (event, value) => {
+    setCurrentTime(value);
+  }
+
+  const seekPlayerTo = (event, value) => {
+    player.seekTo(value);
+    socket.emit('syncVideo', value);
+  }
+
+  const secondsToMinutes = (seconds) => {
+    var min = Math.trunc(seconds / 60);
+    var sec = Math.trunc(seconds % 60);
+    if(min<10) { min = '0'+min }
+    if(sec<10) { sec = '0'+sec }
+    const val = min+':'+sec;
+    return val;
   }
   
   return (
-    <center>
     <div id='ytPlayer'>
+      <center>
       <YouTube
       id='video'
       videoId={props.videoID}
@@ -120,33 +143,55 @@ function Player(props) {
       onStateChange={onStateChange}
       />
 
-      <IconButton onClick={ () => {rewindVideo(5)} }>
+      <Grid container spacing={2}>
+        <Grid item>
+          {secondsToMinutes(currentTime)}
+        </Grid>
+        <Grid item xs>
+          <Slider 
+            color='secondary' 
+            value={currentTime}
+            max={duration} 
+            step={1}
+            onChange={setTime} 
+            onChangeCommitted={seekPlayerTo}
+          />
+        </Grid>
+        <Grid item>
+         {secondsToMinutes(duration)}
+        </Grid>
+      </Grid>
+
+      
+
+      <IconButton onClick={() => {rewindVideo(5)}}>
         <Replay5Rounded style={iconStyle} />
       </IconButton>
 
-      <IconButton onClick={ () => {rewindVideo(10)} }>
+      <IconButton onClick={() => {rewindVideo(10)}}>
         <Replay10Rounded style={{...iconStyle, fontSize: 45}} />
       </IconButton>
 
       { 
       isPlaying ? 
-      <IconButton onClick={ pauseVideo }>
+      <IconButton onClick={pauseVideo}>
         <PauseRounded style={{...iconStyle, fontSize: 60}} />
       </IconButton> : 
-      <IconButton onClick={ playVideo }>
+      <IconButton onClick={playVideo}>
         <PlayArrowRounded style={{...iconStyle, fontSize: 60}} />
       </IconButton>
       }
 
-      <IconButton onClick={ () => {forwardVideo(10)} }>
+      <IconButton onClick={() => {forwardVideo(10)}}>
         <Forward10Rounded style={{...iconStyle, fontSize: 45}} />
       </IconButton>
 
-      <IconButton onClick={ () => {forwardVideo(5)} }>
+      <IconButton onClick={() => {forwardVideo(5)}}>
         <Forward5Rounded style={iconStyle} />
       </IconButton>
-    </div>
+
     </center>
+    </div>
   );
 }
 
