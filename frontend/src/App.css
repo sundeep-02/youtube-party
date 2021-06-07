@@ -9,3 +9,14 @@ body {
   margin: auto;
   color: aliceblue;
 }
+
+#searchfield {
+  width: 400px;
+  height: 3rem;
+  padding-left: 20px;
+  border-radius: 5px;
+  border-color: aliceblue;
+  background-color: #292a2c;
+  color: white;
+  font-size: large;
+}

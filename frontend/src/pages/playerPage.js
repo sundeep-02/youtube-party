@@ -14,7 +14,7 @@ import {
   IconButton,
   Slider,
   Grid
- } from '@material-ui/core';
+} from '@material-ui/core';
 
 const socket = io('http://127.0.0.1:5000');
 var player;
@@ -137,7 +137,7 @@ function Player(props) {
       <center>
       <YouTube
       id='video'
-      videoId={props.videoID}
+      videoId={props.match.params.videoID}
       opts={opts}
       onReady={onPlayerReady}
       onStateChange={onStateChange}
@@ -161,8 +161,6 @@ function Player(props) {
          {secondsToMinutes(duration)}
         </Grid>
       </Grid>
-
-      
 
       <IconButton onClick={() => {rewindVideo(5)}}>
         <Replay5Rounded style={iconStyle} />
