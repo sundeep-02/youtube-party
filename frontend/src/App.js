@@ -7,6 +7,7 @@ import Home from './pages/homePage';
 function App() { 
   return (
     <Router>
+      <header>head</header>
       <div>
         <Switch>
           <Route path='/video/:videoID' component={Player} />

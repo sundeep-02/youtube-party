@@ -18,6 +18,11 @@ var playerState = -1;
 var currentTime = 0;
 
 const socket = io.on('connection', (obj) => {
+    obj.on('redirect', (data) => {
+        console.log(data);
+        obj.broadcast.emit('redirectTo', data);
+    });
+
     obj.on('setPlayerState', (data) => {
         playerState = data;
         obj.broadcast.emit('getPlayerState', playerState);
@@ -44,8 +49,8 @@ const socket = io.on('connection', (obj) => {
     });
 });
 
-app.get('/api/search/:id', async (req, res) => {
-    const query = req.params.id;
+app.get('/api/search/:query', async (req, res) => {
+    const query = req.params.query;
 
     google.youtube('v3').search.list({
         key: process.env.API_KEY,

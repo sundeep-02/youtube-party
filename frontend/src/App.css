@@ -3,6 +3,11 @@ body {
   padding-top: 3.5rem;
 }
 
+header {
+  color: blueviolet;
+  background-color: antiquewhite;
+}
+
 #ytPlayer {
   width: fit-content;
   height: fit-content;

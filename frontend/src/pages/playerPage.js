@@ -16,13 +16,14 @@ import {
   Grid
 } from '@material-ui/core';
 
-const socket = io('http://127.0.0.1:5000');
 var player;
 var playerState;
 var duration = 0;
 
 /*eslint-disable eqeqeq*/
 function Player(props) {
+  const socket = io('http://127.0.0.1:5000');
+
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const iconStyle = { color: 'white', fontSize: 40 };
@@ -51,6 +52,16 @@ function Player(props) {
     socket.emit('ready');
   }
 
+  useEffect(() => {
+    console.log(props.match.params.videoID);
+    socket.emit('redirect', props.match.params.videoID);
+    return () => {
+      socket.disconnect();
+      setIsPlaying();
+      setCurrentTime();
+    }
+  }, []);
+
   const onStateChange = () => {
     playerState = player.getPlayerState();
     if (playerState == 1) {
@@ -62,6 +73,11 @@ function Player(props) {
       socket.emit('setPlayerState', playerState);
     }
   }
+
+  socket.on('redirectTo', (data) => {
+    console.log(data);
+    props.history.push('/video/'+data);
+  });
 
   socket.on('getPlayerState', (data) => {
     playerState = data;
@@ -84,13 +100,6 @@ function Player(props) {
     player.seekTo(data);
     setCurrentTime(data);
   });
-
-  useEffect(() => {
-    //
-    return () => {
-      socket.disconnect();
-    }
-  }, []);
 
   const pauseVideo = () => {
     player.pauseVideo();
