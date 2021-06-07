@@ -1,7 +1,10 @@
 import express from 'express';
 import http from 'http';
 import * as socketio from 'socket.io';
+import { google } from 'googleapis';
+import dotenv from 'dotenv';
 
+dotenv.config();
 const app = express();
 app.use(express.json());
 const server = http.createServer(app);
@@ -39,6 +42,24 @@ const socket = io.on('connection', (obj) => {
             currentTime = 0;
         }
     });
+});
+
+app.get('/api/search/:id', async (req, res) => {
+    const query = req.params.id;
+
+    google.youtube('v3').search.list({
+        key: process.env.API_KEY,
+        part: 'snippet',
+        q: query,
+        maxResults: 10
+    })
+    .then((response) => {
+        console.log(response.data.items);
+        res.send(response.data.items);
+    })
+    .catch((error) => {
+        console.log(error);
+    })
 });
 
 server.listen(5000, () => {

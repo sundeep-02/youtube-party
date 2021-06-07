@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import '../App.css';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
@@ -7,10 +7,12 @@ import { SearchRounded } from '@material-ui/icons';
 
 function Home() {
   const iconStyle = { color: 'white', fontSize: 40 };
+  const [videos, setVideos] = useState([]);
 
-  const search = () => {
+  const search = async () => {
     const query = document.getElementById('searchfield').value;
-    console.log(query);
+    const { data } = await axios.get('/api/search/' + query);
+    setVideos(data);
   }
 
   return (
@@ -22,6 +24,9 @@ function Home() {
           <SearchRounded style={iconStyle} />
         </IconButton>
       </center>
+
+      { videos.map(video => <p id='para'><Link to={'/video/'+video.id.videoId}>{ video.snippet.title }</Link></p>) }
+      
     </div>
   );
 }

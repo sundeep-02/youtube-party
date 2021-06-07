@@ -12,7 +12,6 @@ function App() {
           <Route path='/video/:videoID' component={Player} />
           <Route path='/' exact={true} component={Home} />
         </Switch>
-        {/* <Player videoID = { 'Db1NdYbQhAA' }/> */}
       </div>
     </Router>
   );
