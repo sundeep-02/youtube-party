@@ -37,10 +37,8 @@ const socket = io.on('connection', (obj) => {
     });
 
     obj.on('disconnect', () => {
-        if(io.engine.clientsCount == 0) {
-            playerState = -1;
-            currentTime = 0;
-        }
+        playerState = -1;
+        currentTime = 0;
     });
 });
 
@@ -51,7 +49,7 @@ app.get('/api/search/:query', async (req, res) => {
         key: process.env.API_KEY,
         part: 'snippet',
         q: query,
-        maxResults: 10
+        maxResults: 20
     })
     .then((response) => {
         console.log(response.data.items);

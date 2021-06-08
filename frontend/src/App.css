@@ -15,6 +15,11 @@ header {
   color: white;
 }
 
+#icon {
+  height: 40px;
+  padding-right: 10px;
+}
+
 #ytPlayer {
   width: fit-content;
   height: fit-content;
@@ -33,7 +38,30 @@ header {
   font-size: large;
 }
 
-#para {
-  color: wheat;
-  font-size: larger;
+#parent {
+  padding-top: 40px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  flex-wrap: wrap;
+}
+
+.child {
+  max-width: 340px;
+  padding: 10px;
+  min-height: 265px;
+  border-radius: 5px;
+}
+
+.child:hover {
+  background-color: #343536;
+}
+
+.thumbnail {
+  padding-bottom: 10px;
+}
+
+.title {
+  color: aliceblue;
+  padding-left: 5px;
 }

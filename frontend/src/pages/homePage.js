@@ -33,7 +33,16 @@ function Home(props) {
         </IconButton>
       </center>
 
-      { videos.map(video => <p id='para'><Link to={'/video/'+video.id.videoId}>{ video.snippet.title }</Link></p>) }
+      <div id='parent'>
+      { videos.map(video => 
+      <Link to={'/video/'+video.id.videoId} key={video.id.videoId} style={{ textDecoration: 'none' }}>
+        <div className='child'>
+          <img className='thumbnail' src={video.snippet.thumbnails.medium.url} alt={video.id.videoId}/>
+          <p className='title'>{video.snippet.title}</p>
+        </div>
+      </Link>
+      ) }
+      </div>
       
     </div>
   );
