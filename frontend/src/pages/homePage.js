@@ -17,11 +17,6 @@ function Home(props) {
     return () => { socket.disconnect(); }
   });
 
-  socket.on('redirectTo', (data) => {
-    console.log(data);
-    props.history.push('/video/'+data);
-  });
-
   const search = async () => {
     const query = document.getElementById('searchfield').value;
     const { data } = await axios.get('/api/search/' + query);

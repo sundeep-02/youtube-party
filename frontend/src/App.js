@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Link, Route, Switch } from 'react-router-dom';
 import './App.css';
 import Player from './pages/playerPage';
 import Home from './pages/homePage';
@@ -7,7 +7,9 @@ import Home from './pages/homePage';
 function App() { 
   return (
     <Router>
-      <header>head</header>
+      <header>
+        <Link to='/' id='heading'>YouTube Party</Link>
+      </header>
       <div>
         <Switch>
           <Route path='/video/:videoID' component={Player} />

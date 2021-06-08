@@ -1,11 +1,18 @@
 body {
   background-color: #292a2c;
-  padding-top: 3.5rem;
 }
 
 header {
-  color: blueviolet;
-  background-color: antiquewhite;
+  color: white;
+  background-color: #292a2c;
+  font-size: 30px;
+  font-style: oblique;
+  padding-left: 10px;
+}
+
+#heading {
+  text-decoration: none;
+  color: white;
 }
 
 #ytPlayer {

@@ -18,11 +18,6 @@ var playerState = -1;
 var currentTime = 0;
 
 const socket = io.on('connection', (obj) => {
-    obj.on('redirect', (data) => {
-        console.log(data);
-        obj.broadcast.emit('redirectTo', data);
-    });
-
     obj.on('setPlayerState', (data) => {
         playerState = data;
         obj.broadcast.emit('getPlayerState', playerState);

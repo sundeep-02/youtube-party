@@ -53,10 +53,10 @@ function Player(props) {
   }
 
   useEffect(() => {
-    console.log(props.match.params.videoID);
-    socket.emit('redirect', props.match.params.videoID);
+    //
     return () => {
       socket.disconnect();
+      socket.emit('setCurrentTime', 0);
       setIsPlaying();
       setCurrentTime();
     }
@@ -73,11 +73,6 @@ function Player(props) {
       socket.emit('setPlayerState', playerState);
     }
   }
-
-  socket.on('redirectTo', (data) => {
-    console.log(data);
-    props.history.push('/video/'+data);
-  });
 
   socket.on('getPlayerState', (data) => {
     playerState = data;
