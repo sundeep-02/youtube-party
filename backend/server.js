@@ -18,6 +18,14 @@ var playerState = -1;
 var currentTime = 0;
 
 const socket = io.on('connection', (obj) => {
+    obj.on('toHome', () => {
+        obj.broadcast.emit('redirectToHome');
+    });
+
+    obj.on('toPlayer', (data) => {
+        obj.broadcast.emit('redirectToPlayer', data);
+    });
+
     obj.on('setPlayerState', (data) => {
         playerState = data;
         obj.broadcast.emit('getPlayerState', playerState);
@@ -49,10 +57,10 @@ app.get('/api/search/:query', async (req, res) => {
         key: process.env.API_KEY,
         part: 'snippet',
         q: query,
-        maxResults: 20
+        maxResults: 20,
+        type: 'video'
     })
     .then((response) => {
-        console.log(response.data.items);
         res.send(response.data.items);
     })
     .catch((error) => {

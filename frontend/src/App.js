@@ -10,7 +10,6 @@ function App() {
       <header>
         <Link to='/' id='heading'>
           <img src='../images/youtube_party.png' alt='icon' id='icon' />
-          YouTube Party
         </Link>
       </header>
       <div>

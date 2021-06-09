@@ -38,9 +38,36 @@ function Player(props) {
     },
   };
 
+  socket.on('getPlayerState', (data) => {
+    playerState = data;
+    switch (playerState) {
+      case 1:
+        player.playVideo();
+        break;
+      case 2:
+        player.pauseVideo();
+        break;
+      case 3:
+        player.pauseVideo();
+        break;
+      default:
+        break;
+    }
+  });
+
+  socket.on('getCurrentTime', (data) => {
+    player.seekTo(data);
+    setCurrentTime(data);
+  });
+
+  socket.once('redirectToHome', () => {
+    props.history.push('/');
+  });
+
   const onPlayerReady = (event) => {
     player = event.target;
     duration = player.getDuration();
+    socket.emit('toPlayer', props.match.params.videoID);
 
     setInterval(() => {
       if(playerState == 1) {
@@ -73,28 +100,6 @@ function Player(props) {
       socket.emit('setPlayerState', playerState);
     }
   }
-
-  socket.on('getPlayerState', (data) => {
-    playerState = data;
-    switch (playerState) {
-      case 1:
-        player.playVideo();
-        break;
-      case 2:
-        player.pauseVideo();
-        break;
-      case 3:
-        player.pauseVideo();
-        break;
-      default:
-        break;
-    }
-  });
-
-  socket.on('getCurrentTime', (data) => {
-    player.seekTo(data);
-    setCurrentTime(data);
-  });
 
   const pauseVideo = () => {
     player.pauseVideo();

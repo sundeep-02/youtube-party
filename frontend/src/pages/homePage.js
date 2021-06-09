@@ -11,13 +11,19 @@ function Home(props) {
 
   const iconStyle = { color: 'white', fontSize: 40 };
   const [videos, setVideos] = useState([]);
+  const [notSearched, setNotSearched] = useState(true);
 
   useEffect(() => {
-    //
+    socket.emit('toHome');
     return () => { socket.disconnect(); }
   });
 
+  socket.once('redirectToPlayer', (data) => {
+    props.history.push('/video/'+data);
+  });
+
   const search = async () => {
+    setNotSearched(false);
     const query = document.getElementById('searchfield').value;
     const { data } = await axios.get('/api/search/' + query);
     setVideos(data);
@@ -27,23 +33,25 @@ function Home(props) {
     <div id='main'>
       <center>
         <input id='searchfield' type='text' placeholder='Type to search...' />
-
         <IconButton onClick={search}>
           <SearchRounded style={iconStyle} />
         </IconButton>
       </center>
 
+      { notSearched && <center><p id='para'>
+        <span>Welcome to <em>YouTube Party!</em></span><br/>
+        Search YouTube videos and watch them along with your friends in <em>real-time</em>.
+        </p></center> }
+
       <div id='parent'>
-      { videos.map(video => 
+      { videos && videos.map(video => 
       <Link to={'/video/'+video.id.videoId} key={video.id.videoId} style={{ textDecoration: 'none' }}>
         <div className='child'>
           <img className='thumbnail' src={video.snippet.thumbnails.medium.url} alt={video.id.videoId}/>
           <p className='title'>{video.snippet.title}</p>
         </div>
-      </Link>
-      ) }
+      </Link> )}
       </div>
-      
     </div>
   );
 }
